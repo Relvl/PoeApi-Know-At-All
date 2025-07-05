@@ -28,11 +28,11 @@ public static class Gui
 
     public static void HotkeySelector(string buttonName, HotkeyNode node)
     {
-        var flagOpen = false;
+        var flagOpen = true;
         if (ImGui.Button(buttonName))
         {
             ImGui.OpenPopup(buttonName);
-            flagOpen = true;
+            // flagOpen = true;
         }
 
         if (ImGui.BeginPopupModal(buttonName, ref flagOpen, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse))

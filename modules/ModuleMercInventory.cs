@@ -46,7 +46,11 @@ public class ModuleMercInventory(Mod mod) : IModule
     {
         _inGameUi = null;
         _mercWindow = null;
-        if (!Settings.Enabled) return;
+        if (!Settings.Enabled)
+            return;
+        if (!GameController.IsFunctionsReady(true))
+            return;
+
         _inGameUi = GameController?.IngameState?.IngameUi;
         _mercWindow = _inGameUi?.MercenaryEncounterWindow;
     }

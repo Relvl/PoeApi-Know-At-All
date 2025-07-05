@@ -8,6 +8,7 @@ using ExileCore.Shared.Attributes;
 using ExileCore.Shared.Enums;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
+using Know_At_All.utils;
 using SharpDX;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
@@ -42,7 +43,10 @@ public class ModuleT17(Mod mod) : IModule
         _sawblades.Clear();
         _volatileFound = false;
 
+
         if (!mod.Settings.Abyss.Enabled)
+            return;
+        if (!GameController.IsFunctionsReady())
             return;
 
         foreach (var entity in GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Daemon])
@@ -83,7 +87,7 @@ public class ModuleT17(Mod mod) : IModule
         if (_frameCount == int.MaxValue) _frameCount = 0;
         _frameCount++;
 
-        if (!mod.Settings.Abyss.Enabled.Value) 
+        if (!mod.Settings.Abyss.Enabled.Value)
             return;
 
         var blink = _frameCount % 10 >= 5;

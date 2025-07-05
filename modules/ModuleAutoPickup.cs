@@ -48,7 +48,10 @@ public class ModuleAutoPickup(Mod mod) : IModule
 
     public void Render()
     {
-        if (!Settings.Enabled) return;
+        if (!Settings.Enabled)
+            return;
+        if (!GameController.IsFunctionsReady())
+            return;
 
         // todo split into tick and render
 
@@ -57,12 +60,6 @@ public class ModuleAutoPickup(Mod mod) : IModule
             _lastClickedHash = 0;
             return;
         }
-
-        if (!GameController.Window.IsForeground()) return;
-        if (GameController.Area.CurrentArea.IsHideout) return;
-        if (GameController.Area.CurrentArea.IsTown) return;
-        if (GameController.IngameState.IngameUi.OpenLeftPanel.Address != 0) return;
-        if (GameController.IngameState.IngameUi.OpenRightPanel.Address != 0) return;
 
         var windowRect = GameController.Window.GetWindowRectangle();
         windowRect.Inflate(-100, -100);
@@ -130,7 +127,7 @@ public class ModuleAutoPickup(Mod mod) : IModule
         Gui.Checkbox("Force cursor position", Settings.AutoPickupForcePosition);
         ImGui.SameLine();
         Gui.HelpMarker("This will force the cursor to the center of the item label before clicking.");
-        
+
         Gui.HotkeySelector($"Hotkey: {Settings.PickupTrigger.Value}", Settings.PickupTrigger);
         ImGui.Separator();
 

@@ -8,10 +8,12 @@ using ExileCore;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.MemoryObjects;
+using ExileCore.Shared.Cache;
 using ExileCore.Shared.Enums;
 using ExileCore.Shared.Helpers;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
+using Know_At_All.utils;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
@@ -31,6 +33,11 @@ public class ModuleAbyss(Mod mod) : IModule
     public string Name => Settings.Enabled ? "Abyss (enabled)" : "Abyss";
     public ToggleNode Expanded => Settings.Expanded;
 
+    private readonly CachedValue<bool> _ingameUiCheckVisible = new TimeCache<bool>(() =>
+            mod.GameController.IngameState.IngameUi.FullscreenPanels.Any(x => x.IsVisibleLocal) ||
+            mod.GameController.IngameState.IngameUi.LargePanels.Any(x => x.IsVisibleLocal),
+        250);
+
     public void Initialise()
     {
         _map = null;
@@ -46,7 +53,8 @@ public class ModuleAbyss(Mod mod) : IModule
 
     public void Tick()
     {
-        if (!Settings.Enabled.Value) return;
+        if (!Settings.Enabled.Value)
+            return;
 
         var now = Environment.TickCount64;
         if (now - _lastTickTime < TickIntervalMs) return;
@@ -95,7 +103,12 @@ public class ModuleAbyss(Mod mod) : IModule
 
     public void Render()
     {
-        if (!Settings.Enabled.Value || _map is null) return;
+        if (!Settings.Enabled.Value || _map is null)
+            return;
+        if (!GameController.IsFunctionsReady(true))
+            return;
+        if (_ingameUiCheckVisible?.Value != false)
+            return;
 
         var player = GameController.Player;
         if (player is null || !player.IsValid) return;

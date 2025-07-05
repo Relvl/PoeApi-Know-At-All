@@ -1,0 +1,2 @@
+Build failed:
+[24.06.2025 22:05:33, D:\_POE_DESKTOP\TOOL\Plugins\Source\Know-At-All\modules\ModuleT17.cs(8, 35)] CS0535: "ModuleT17" не реализует член интерфейса "IModule.Expanded".

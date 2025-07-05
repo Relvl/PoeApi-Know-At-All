@@ -30,6 +30,12 @@ public class ModuleAutoPickup(Mod mod) : IModule
     public string Name => Settings.Enabled ? "Auto pickup items (enabled)" : "Auto pickup items";
     public ToggleNode Expanded => Settings.Expanded;
 
+    public void Initialise()
+    {
+        Input.RegisterKey(Settings.PickupTrigger.Value);
+        Settings.PickupTrigger.OnValueChanged += () => Input.RegisterKey(Settings.PickupTrigger.Value);
+    }
+
     public void Tick()
     {
         _inGameUi = null;
@@ -46,7 +52,7 @@ public class ModuleAutoPickup(Mod mod) : IModule
 
         // todo split into tick and render
 
-        if (!NativeInput.IsKeyDown(Keys.LMenu) && !NativeInput.IsKeyDown(Keys.RMenu))
+        if (!NativeInput.IsKeyDown(Settings.PickupTrigger.Value))
         {
             _lastClickedHash = 0;
             return;
@@ -73,7 +79,6 @@ public class ModuleAutoPickup(Mod mod) : IModule
 
             if (!labelOnGround.ItemOnGround.TryGetComponent<WorldItem>(out var worldItem)) continue;
             if (!IsItemPickable(worldItem)) continue;
-            // todo check if it fits in inventory
 
             var rect = labelOnGround.Label.GetClientRect();
             var clickRect = rect;
@@ -115,7 +120,7 @@ public class ModuleAutoPickup(Mod mod) : IModule
 
     public void DrawSettings()
     {
-        ImGui.Text("Auto pick up: hover over item on the ground with this option enabled and [Alt] key pressed, it will automatically be clicked.");
+        ImGui.Text($"Auto pick up: hover over item on the ground with this option enabled and [{Settings.PickupTrigger.Value}] key pressed, it will automatically be clicked.");
         ImGui.Text("It will pickup any item when no panel is open (inventory etc).");
         ImGui.Text("You should hide unwanted items in your Loot Filter, no IFL here.");
         ImGui.Separator();
@@ -125,6 +130,8 @@ public class ModuleAutoPickup(Mod mod) : IModule
         Gui.Checkbox("Force cursor position", Settings.AutoPickupForcePosition);
         ImGui.SameLine();
         Gui.HelpMarker("This will force the cursor to the center of the item label before clicking.");
+        
+        Gui.HotkeySelector($"Hotkey: {Settings.PickupTrigger.Value}", Settings.PickupTrigger);
         ImGui.Separator();
 
         ImGui.Text("Pick up:");
@@ -260,5 +267,6 @@ public class ModuleAutoPickup(Mod mod) : IModule
         public ToggleNode AutoPickupSkipUniqRareIdentified { get; set; } = new(true);
         public ToggleNode AutoPickupFlasks { get; set; } = new(false);
         public ToggleNode CheckInventoryFits { get; set; } = new(true);
+        public HotkeyNode PickupTrigger { get; set; } = new(Keys.LMenu);
     }
 }

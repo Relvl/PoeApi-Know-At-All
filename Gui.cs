@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
+using ExileCore;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
 using SharpDX;
@@ -23,9 +26,47 @@ public static class Gui
             setter(color);
     }
 
-    public static SharpDX.Color ToSharpDxColor(Vector4 vec)
+    public static void HotkeySelector(string buttonName, HotkeyNode node)
     {
-        return new SharpDX.Color(
+        var flagOpen = false;
+        if (ImGui.Button(buttonName))
+        {
+            ImGui.OpenPopup(buttonName);
+            flagOpen = true;
+        }
+
+        if (ImGui.BeginPopupModal(buttonName, ref flagOpen, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse))
+        {
+            if (Input.GetKeyState(Keys.Escape))
+            {
+                ImGui.CloseCurrentPopup();
+                ImGui.EndPopup();
+            }
+            else
+            {
+                foreach (var key in Enum.GetValues(typeof(Keys)))
+                {
+                    if (Input.GetKeyState((Keys)key))
+                    {
+                        node.Value = (Keys)key;
+                        ImGui.CloseCurrentPopup();
+                        break;
+                    }
+                }
+            }
+
+            var interpolatedStringHandler = new DefaultInterpolatedStringHandler(44, 1);
+            interpolatedStringHandler.AppendLiteral(" Press new key to change '");
+            interpolatedStringHandler.AppendFormatted(node.Value);
+            interpolatedStringHandler.AppendLiteral("' or Esc for exit.");
+            ImGui.Text(interpolatedStringHandler.ToStringAndClear());
+            ImGui.EndPopup();
+        }
+    }
+
+    public static Color ToSharpDxColor(Vector4 vec)
+    {
+        return new Color(
             (byte)(vec.X * 255), // Red
             (byte)(vec.Y * 255), // Green
             (byte)(vec.Z * 255), // Blue

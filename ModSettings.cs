@@ -10,5 +10,6 @@ public class ModSettings : ISettings
     public ModuleT17.SettingsClass T17 { get; set; } = new();
     public ModuleAutoPickup.SettingsClass AutoPickup { get; set; } = new();
     public ModuleMercInventory.SettingsClass MercInventory { get; set; } = new();
+    public ModuleMapMods.SettingsClass MapMods { get; set; } = new();
     public ToggleNode Enable { get; set; } = new(false);
 }

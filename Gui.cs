@@ -73,6 +73,16 @@ public static class Gui
             (byte)(vec.W * 255) // Alpha
         );
     }
+    
+    public static Vector4 ToVector4(Color color)
+    {
+        return new Vector4(
+            color.R / 255f,
+            color.G / 255f,
+            color.B / 255f,
+            color.A / 255f
+        );
+    }
 
     public static void HelpMarker(string desc)
     {

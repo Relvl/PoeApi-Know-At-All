@@ -33,7 +33,7 @@ public class ModuleMercInventory(Mod mod) : IModule
     private SettingsClass Settings => mod.Settings.MercInventory;
     private GameController GameController => mod.GameController;
     private Graphics Graphics => mod.Graphics;
-    public string Name => Settings.Enabled ? "Merc Inventory (enabled)" : "Merc Inventory (disabled)";
+    public string Name => Settings.Enabled ? "Merc Inventory (enabled)" : "Merc Inventory";
     public ToggleNode Expanded => Settings.Expanded;
 
     public void Initialise()

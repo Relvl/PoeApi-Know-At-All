@@ -29,6 +29,7 @@ public class Mod : BaseSettingsPlugin<ModSettings>
         _modules.Add(new ModuleT17(this));
         _modules.Add(new ModuleAutoPickup(this));
         _modules.Add(new ModuleMercInventory(this));
+        _modules.Add(new ModuleMapMods(this));
     }
 
     public override bool Initialise()
@@ -110,6 +111,7 @@ public class Mod : BaseSettingsPlugin<ModSettings>
                     ImGui.Indent();
                     module.DrawSettings();
                     ImGui.Unindent();
+                    // don't need TreePop here! ImGuiTreeNodeFlags.CollapsingHeader deals with it!
                 }
 
                 ImGui.Spacing();

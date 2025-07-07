@@ -82,10 +82,7 @@ public class ModuleMapMods(Mod mod) : IModule
 
             if (map.GetClientRectCache.Contains(mouseCurPosition))
                 if (Settings.PickFromMap.PressedOnce())
-                {
-                    DebugWindow.LogMsg("Picking mods from map");
                     MapModifierPicker.Select(Profile, modsComponent);
-                }
 
             var rect = map.GetClientRectCache;
 
@@ -99,18 +96,27 @@ public class ModuleMapMods(Mod mod) : IModule
                 Graphics.DrawCircleFilled(rect.Center.ToVector2Num(), 12, CorruptedColor, 20);
 
             foreach (var explicitMod in modsComponent.ExplicitMods)
-            foreach (var (key, enabled) in Profile.DangerousMods)
             {
-                if (!enabled) continue;
-                if (Settings.MarkDangerous && explicitMod.ModRecord.Key == key)
-                {
-                    Graphics.DrawLine(topLeft, bottomRight, 5, Color.OrangeRed);
-                    Graphics.DrawLine(topRight, bottomLeft, 5, Color.OrangeRed);
-                }
-                if (Settings.MarkNice && explicitMod.ModRecord.Key == key)
-                {
-                    Graphics.DrawFrame(rect, Color.Lime, 5);
-                }
+                if (Settings.MarkDangerous)
+                    foreach (var (key, enabled) in Profile.DangerousMods)
+                    {
+                        if (!enabled) continue;
+                        if (explicitMod.ModRecord.Key == key)
+                        {
+                            Graphics.DrawLine(topLeft, bottomRight, 5, Color.OrangeRed);
+                            Graphics.DrawLine(topRight, bottomLeft, 5, Color.OrangeRed);
+                        }
+                    }
+
+                if (Settings.MarkNice)
+                    foreach (var (key, enabled) in Profile.NiceMods)
+                    {
+                        if (!enabled) continue;
+                        if (explicitMod.ModRecord.Key == key)
+                        {
+                            Graphics.DrawFrame(rect, Color.Lime, 5);
+                        }
+                    }
             }
         }
 
@@ -134,11 +140,11 @@ public class ModuleMapMods(Mod mod) : IModule
             MapModifierProfilePicker.Select(Profile, Settings);
 
         ImGui.Separator();
-        
+
         Gui.Checkbox("Mark dangerous mods", Settings.MarkDangerous);
         Gui.Checkbox("Mark nice mods", Settings.MarkNice);
         Gui.Checkbox("Mark corrupted 8-mod maps", Settings.MarkCorrupted);
-        
+
         ImGui.Separator();
 
         if (ImGui.TreeNodeEx("Dangerous Mods##TreeOne", ImGuiTreeNodeFlags.CollapsingHeader | ImGuiTreeNodeFlags.DefaultOpen))

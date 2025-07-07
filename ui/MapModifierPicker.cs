@@ -50,8 +50,10 @@ public static class MapModifierPicker
                 foreach (var mod in _mods.ExplicitMods)
                 {
                     ImGui.TableNextRow();
-                    var isAlreadyNiceMod = _currentProfile.NiceMods.ContainsKey(mod.ModRecord.Key);
-                    var isAlreadyDangerousMod = _currentProfile.DangerousMods.ContainsKey(mod.ModRecord.Key);
+                    var key = mod.ModRecord?.Key;
+                    if (key == null) continue;
+                    var isAlreadyNiceMod = _currentProfile.NiceMods.ContainsKey(key);
+                    var isAlreadyDangerousMod = _currentProfile.DangerousMods.ContainsKey(key);
                     
                     #region Dangerous
                     ImGui.TableSetColumnIndex(0);
@@ -60,16 +62,16 @@ public static class MapModifierPicker
                     if (isAlreadyDangerousMod)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Button, RemoveColor);
-                        if (ImGui.Button($"-##{mod.ModRecord.Key}", buttonSize))
+                        if (ImGui.Button($"-##{key}-Dangerous", buttonSize))
                         {
-                            _currentProfile.DangerousMods.Remove(mod.ModRecord.Key);
+                            _currentProfile.DangerousMods.Remove(key);
                         }
                         ImGui.PopStyleColor();
                         ImGui.SameLine();
-                        var checkedRef = _currentProfile.DangerousMods[mod.ModRecord.Key];
-                        if (ImGui.Checkbox($"##{mod.ModRecord.Key}", ref checkedRef))
+                        var checkedRef = _currentProfile.DangerousMods[key];
+                        if (ImGui.Checkbox($"##{key}-Dangerous", ref checkedRef))
                         {
-                            _currentProfile.DangerousMods[mod.ModRecord.Key] = checkedRef;   
+                            _currentProfile.DangerousMods[key] = checkedRef;   
                         }
                         if (ImGui.IsItemHovered())
                         {
@@ -83,9 +85,9 @@ public static class MapModifierPicker
                     else
                     {
                         ImGui.PushStyleColor(ImGuiCol.Button, BadColor);
-                        if (ImGui.Button($"+##{mod.ModRecord.Key}", buttonSize))
+                        if (ImGui.Button($"+##{key}-Dangerous", buttonSize))
                         {
-                            _currentProfile.DangerousMods.Add(mod.ModRecord.Key, true);
+                            _currentProfile.DangerousMods.Add(key, true);
                         }
                         ImGui.PopStyleColor();
                     }
@@ -100,16 +102,16 @@ public static class MapModifierPicker
                     if (isAlreadyNiceMod)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Button, RemoveColor);
-                        if (ImGui.Button($"-##{mod.ModRecord.Key}", buttonSize))
+                        if (ImGui.Button($"-##{key}-Nice", buttonSize))
                         {
-                            _currentProfile.NiceMods.Remove(mod.ModRecord.Key);
+                            _currentProfile.NiceMods.Remove(key);
                         }
                         ImGui.PopStyleColor();
                         ImGui.SameLine();
-                        var checkedRef = _currentProfile.NiceMods[mod.ModRecord.Key];
-                        if (ImGui.Checkbox($"##{mod.ModRecord.Key}", ref checkedRef))
+                        var checkedRef = _currentProfile.NiceMods[key];
+                        if (ImGui.Checkbox($"##{key}-Nice", ref checkedRef))
                         {
-                            _currentProfile.NiceMods[mod.ModRecord.Key] = checkedRef;   
+                            _currentProfile.NiceMods[key] = checkedRef;   
                         }
                         if (ImGui.IsItemHovered())
                         {
@@ -123,9 +125,9 @@ public static class MapModifierPicker
                     else
                     {
                         ImGui.PushStyleColor(ImGuiCol.Button, NiceColor);
-                        if (ImGui.Button($"+##{mod.ModRecord.Key}", buttonSize))
+                        if (ImGui.Button($"+##{key}-Nice", buttonSize))
                         {
-                            _currentProfile.NiceMods.Add(mod.ModRecord.Key, true);
+                            _currentProfile.NiceMods.Add(key, true);
                         }
                         ImGui.PopStyleColor();
                     }
@@ -140,7 +142,7 @@ public static class MapModifierPicker
                     {
                         ImGui.BeginTooltip();
                         ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
-                        ImGui.TextUnformatted(mod.ModRecord.Key);
+                        ImGui.TextUnformatted(key);
                         ImGui.PopTextWrapPos();
                         ImGui.EndTooltip();
                     }
@@ -160,7 +162,10 @@ public static class MapModifierPicker
     public static void Select(ModuleMapMods.SettingsClass.Profile currentProfile, Mods mods)
     {
         if (_open)
-            throw new InvalidOperationException("Selector already open");
+        {
+            Dispose();
+            return;
+        }
 
         _currentProfile = currentProfile;
         _open = true;

@@ -30,6 +30,7 @@ public class Mod : BaseSettingsPlugin<ModSettings>
         _modules.Add(new ModuleAutoPickup(this));
         _modules.Add(new ModuleMercInventory(this));
         _modules.Add(new ModuleMapMods(this));
+        _modules.Add(new ModuleCurrentAreaMods(this));
     }
 
     public override bool Initialise()

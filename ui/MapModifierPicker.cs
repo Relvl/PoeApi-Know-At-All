@@ -46,7 +46,7 @@ public static class MapModifierPicker
                 ImGui.TableSetupColumn("Nice", ImGuiTableColumnFlags.None, 80);
                 ImGui.TableSetupColumn("");
                 ImGui.TableHeadersRow();
-                
+
                 foreach (var mod in _mods.ExplicitMods)
                 {
                     ImGui.TableNextRow();
@@ -54,10 +54,11 @@ public static class MapModifierPicker
                     if (key == null) continue;
                     var isAlreadyNiceMod = _currentProfile.NiceMods.ContainsKey(key);
                     var isAlreadyDangerousMod = _currentProfile.DangerousMods.ContainsKey(key);
-                    
+
                     #region Dangerous
+
                     ImGui.TableSetColumnIndex(0);
-                    
+
 
                     if (isAlreadyDangerousMod)
                     {
@@ -66,13 +67,15 @@ public static class MapModifierPicker
                         {
                             _currentProfile.DangerousMods.Remove(key);
                         }
+
                         ImGui.PopStyleColor();
                         ImGui.SameLine();
                         var checkedRef = _currentProfile.DangerousMods[key];
                         if (ImGui.Checkbox($"##{key}-Dangerous", ref checkedRef))
                         {
-                            _currentProfile.DangerousMods[key] = checkedRef;   
+                            _currentProfile.DangerousMods[key] = checkedRef;
                         }
+
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.BeginTooltip();
@@ -89,16 +92,17 @@ public static class MapModifierPicker
                         {
                             _currentProfile.DangerousMods.Add(key, true);
                         }
+
                         ImGui.PopStyleColor();
                     }
-                    
-                    
+
                     #endregion
-                    
+
                     #region Nice
+
                     ImGui.TableSetColumnIndex(1);
-                    
-                    
+
+
                     if (isAlreadyNiceMod)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Button, RemoveColor);
@@ -106,13 +110,15 @@ public static class MapModifierPicker
                         {
                             _currentProfile.NiceMods.Remove(key);
                         }
+
                         ImGui.PopStyleColor();
                         ImGui.SameLine();
                         var checkedRef = _currentProfile.NiceMods[key];
                         if (ImGui.Checkbox($"##{key}-Nice", ref checkedRef))
                         {
-                            _currentProfile.NiceMods[key] = checkedRef;   
+                            _currentProfile.NiceMods[key] = checkedRef;
                         }
+
                         if (ImGui.IsItemHovered())
                         {
                             ImGui.BeginTooltip();
@@ -129,13 +135,14 @@ public static class MapModifierPicker
                         {
                             _currentProfile.NiceMods.Add(key, true);
                         }
+
                         ImGui.PopStyleColor();
                     }
-                    
-                    
+
                     #endregion
-                    
+
                     #region Name
+
                     ImGui.TableSetColumnIndex(2);
                     ImGui.Text(mod.Translation);
                     if (ImGui.IsItemHovered())
@@ -146,9 +153,10 @@ public static class MapModifierPicker
                         ImGui.PopTextWrapPos();
                         ImGui.EndTooltip();
                     }
+
                     #endregion
                 }
-                
+
                 ImGui.EndTable();
             }
 

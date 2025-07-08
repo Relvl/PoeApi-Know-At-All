@@ -30,8 +30,10 @@ public class Mod : BaseSettingsPlugin<ModSettings>
         _modules.Add(new ModuleAutoPickup(this));
         _modules.Add(new ModuleMercInventory(this));
         _modules.Add(new ModuleMapMods(this));
-        _modules.Add(new ModuleCurrentAreaMods(this));
+        _modules.Add(new ModuleAreaMods(this));
     }
+    
+    public string PlayerName => GameController.Player is null || !GameController.Player.TryGetComponent<Player>(out var player) ? "Unknown" : player.PlayerName;
 
     public override bool Initialise()
     {

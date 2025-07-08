@@ -28,15 +28,14 @@ public class ModuleMapMods(Mod mod) : IModule
     private GameController GameController => mod.GameController;
     private Graphics Graphics => mod.Graphics;
 
-    private string PlayerName => GameController.Player is null || !GameController.Player.TryGetComponent<Player>(out var player) ? "Unknown" : player.PlayerName;
-
     private SettingsClass.Profile Profile
     {
         get
         {
-            if (Settings.Profiles.TryGetValue(PlayerName, out var profile)) return profile;
+            var playerName = mod.PlayerName;
+            if (Settings.Profiles.TryGetValue(playerName, out var profile)) return profile;
             profile = new SettingsClass.Profile();
-            Settings.Profiles.Add(PlayerName, profile);
+            Settings.Profiles.Add(playerName, profile);
             return profile;
         }
     }
@@ -134,7 +133,7 @@ public class ModuleMapMods(Mod mod) : IModule
         ImGui.Text("Hover over the map item and press the hotkey to pick mods.");
 
         ImGui.Separator();
-        ImGui.Text($"Current player: {PlayerName}");
+        ImGui.Text($"Current player: {mod.PlayerName}");
         ImGui.SameLine();
         if (ImGui.Button("Pick settings from..."))
             MapModifierProfilePicker.Select(Profile, Settings);
